@@ -67,6 +67,7 @@ public class TemplateEmitter {
 		}
 
 		URL skeletonURL = null;
+		boolean isUserSkeleton = false;
 		if (StringUtils.isNotEmpty(parser.getSkeleton())) {
 			String templateURLName = templateURL.toString();
 			int pos = templateURLName.lastIndexOf("/");
@@ -78,6 +79,7 @@ public class TemplateEmitter {
 					throw new EmitterException(ErrorCode.SKELETON_NOT_FOUND, skeletonURLString, e.getMessage());
 				}
 			}
+			isUserSkeleton = true;
 		} else {
 			skeletonURL = getClass().getResource("/default.skeleton");
 		}
@@ -118,6 +120,17 @@ public class TemplateEmitter {
 				}
 				left = left.substring(0, pos + 1) + builder.toString() + left.substring(pos + 1);
 			}
+			
+			if (isUserSkeleton)
+			{
+				StringBuilder buffer = new StringBuilder();
+				buffer.append(left);
+				buffer.append("\n");
+				buffer.append("  String NL = System.getProperties().getProperty(\"line.separator\");");
+				buffer.append("\n");
+				left = buffer.toString();
+			}
+			
 			skeleton.header = left;
 			skeleton.footer = right;
 		}
