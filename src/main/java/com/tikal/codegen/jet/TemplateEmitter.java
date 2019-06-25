@@ -104,9 +104,12 @@ public class TemplateEmitter {
 			left = left.replace("CLASS", skeleton.className);
 
 			if (StringUtils.isNotBlank(parser.getImports())) {
-				String[] imports = parser.getImports().split(" ");
+				String[] imports = parser.getImports().split("\\s+");
 				StringBuilder builder = new StringBuilder("\n");
 				for (String imp : imports) {
+					if (imp == null || imp.trim().isEmpty()) {
+						continue;
+					}
 					builder.append("import ");
 					builder.append(imp);
 					builder.append(";\n");
@@ -120,9 +123,8 @@ public class TemplateEmitter {
 				}
 				left = left.substring(0, pos + 1) + builder.toString() + left.substring(pos + 1);
 			}
-			
-			if (isUserSkeleton)
-			{
+
+			if (isUserSkeleton) {
 				StringBuilder buffer = new StringBuilder();
 				buffer.append(left);
 				buffer.append("\n");
@@ -130,7 +132,7 @@ public class TemplateEmitter {
 				buffer.append("\n");
 				left = buffer.toString();
 			}
-			
+
 			skeleton.header = left;
 			skeleton.footer = right;
 		}
