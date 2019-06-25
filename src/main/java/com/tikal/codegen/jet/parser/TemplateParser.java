@@ -66,8 +66,8 @@ public class TemplateParser {
 						JetDirectiveTree directive = (JetDirectiveTree) child;
 						if (directive.getId() != null) {
 							if (directive.getId().equals("jet")) {
-								packageName = directive.getAttribute("package");
-								className = directive.getAttribute("class");
+								packageName = directive.getAttribute("package", "jet");
+								className = directive.getAttribute("class", "Gen");
 								skeleton = directive.getAttribute("skeleton");
 								imports = directive.getAttribute("imports");
 							} else if (directive.getId().equals("include")) {
@@ -204,6 +204,10 @@ public class TemplateParser {
 		}
 
 		public String getAttribute(String name) {
+			return getAttribute(name, null);
+		}
+
+		public String getAttribute(String name, String def) {
 			JetAttributesTree attrubutes = (JetAttributesTree) getChildByType(JetParser.ATTRIBUTES);
 			if (attrubutes != null) {
 				JetAttributeTree attrubute = attrubutes.getAttribute(name);
@@ -211,7 +215,7 @@ public class TemplateParser {
 					return attrubute.getValue();
 				}
 			}
-			return null;
+			return def;
 		}
 	}
 
